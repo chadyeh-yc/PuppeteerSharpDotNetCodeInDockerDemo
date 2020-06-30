@@ -20,7 +20,6 @@ RUN apt-get update \
 
 # Add user, so we don't need --no-sandbox.
 # same layer as npm install to keep re-chowned files from using up several hundred MBs more space
-# 'groupadd' 新增 [pptruser] 群組, 'useradd' 新增使用者 [pptruser] 加入 [audio,video pptruser] 群組
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser
@@ -36,6 +35,8 @@ ENV PUPPETEER_EXECUTABLE_PATH "/usr/bin/google-chrome-unstable"
 #####################
 #END PUPPETEER RECIPE
 #####################
+
+VOLUME ["/home/pptruser/Downloads"]
 
 COPY bin/Release/netcoreapp3.1/publish/ /app/
 ENTRYPOINT ["dotnet", "/app/PuppeteerSharpDotNetCodeInDockerDemo.dll"]
