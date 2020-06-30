@@ -9,18 +9,18 @@ FROM mcr.microsoft.com/dotnet/core/runtime:3.1
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
 # installs, work.
-    # §ó·s apt-get 
+    # æ›´æ–° apt-get 
 RUN apt-get update \
-    # ¦w¸Ë  wget, gnupg
+    # å®‰è£  wget, gnupg
     && apt-get install -y wget gnupg \
-    # ¨ú±o google ssl public key ¥[¤J¨ì apt ¤¤
+    # å–å¾— google ssl public key åŠ å…¥åˆ° apt ä¸­
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    # ¨ú±o google Linux Software Repositories ²M³æ
+    # å–å¾— google Linux Software Repositories æ¸…å–®
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    # §ó·s apt-get
+    # æ›´æ–° apt-get
     && apt-get update \
-    # ¦w¸Ë google-chrome-unstable, fonts-ipafont-gothic, fonts-wqy-zenhei, fonts-thai-tlwg, fonts-kacst, fonts-freefont-ttf
-    # no-install-recommends  Á×§K¦w¸Ë«D¥²¶·ªº¤å¥ó¡A±q¦Ó¼W¥[Åé¿n
+    # å®‰è£ google-chrome-unstable, fonts-ipafont-gothic, fonts-wqy-zenhei, fonts-thai-tlwg, fonts-kacst, fonts-freefont-ttf
+    # no-install-recommends  é¿å…å®‰è£éå¿…é ˆçš„æ–‡ä»¶ï¼Œå¾è€Œå¢åŠ é«”ç©
     
     # google-chrome-unstable - Google Chrome
     # fonts-ipafont-gothic   - Japanese font
@@ -31,16 +31,16 @@ RUN apt-get update \
     
     && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf \
     --no-install-recommends \
-    # ¬°¤FÀ£ÁY container ªÅ¶¡±N apt lists ªº¤º®e§R°£
+    # ç‚ºäº†å£“ç¸® container ç©ºé–“å°‡ apt lists çš„å…§å®¹åˆªé™¤
     && rm -rf /var/lib/apt/lists/*
 
 # Add user, so we don't need --no-sandbox.
 # same layer as npm install to keep re-chowned files from using up several hundred MBs more space
-# 'groupadd' ·s¼W [pptruser] ¸s²Õ, 'useradd' ·s¼W¨Ï¥ÎªÌ [pptruser] ¥[¤J [audio,video pptruser] ¸s²Õ
+# 'groupadd' æ–°å¢ [pptruser] ç¾¤çµ„, 'useradd' æ–°å¢ä½¿ç”¨è€… [pptruser] åŠ å…¥ [audio,video pptruser] ç¾¤çµ„
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
-    # ·s¼W¸ê®Æ§¨
+    # æ–°å¢è³‡æ–™å¤¾
     && mkdir -p /home/pptruser/Downloads \
-    # ·s¼W User [pptruser:pptruser] /home/pptruser ¼g¤JÅv­­
+    # æ–°å¢ User [pptruser:pptruser] /home/pptruser å¯«å…¥æ¬Šé™
     && chown -R pptruser:pptruser /home/pptruser
 
 # Run everything after as non-privileged user.
@@ -49,7 +49,7 @@ USER pptruser
 # Run everything after as non-privileged user.
 USER pptruser
 
-# ³]©wÀô¹ÒÅÜ¼Æ PUPPETEER_EXECUTABLE_PATH puppeteer sharp ·|¥h°»´ú
+# è¨­å®šç’°å¢ƒè®Šæ•¸ PUPPETEER_EXECUTABLE_PATH puppeteer sharp æœƒå»åµæ¸¬
 ENV PUPPETEER_EXECUTABLE_PATH "/usr/bin/google-chrome-unstable"
 
 #####################
