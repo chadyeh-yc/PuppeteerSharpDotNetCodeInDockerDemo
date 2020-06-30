@@ -9,20 +9,38 @@ FROM mcr.microsoft.com/dotnet/core/runtime:3.1
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
 # installs, work.
+    # 更新 apt-get 
 RUN apt-get update \
+    # 安裝  wget, gnupg
     && apt-get install -y wget gnupg \
+    # 取得 google ssl public key 加入到 apt 中
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    # 取得 google Linux Software Repositories 清單
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+    # 更新 apt-get
     && apt-get update \
+    # 安裝 google-chrome-unstable, fonts-ipafont-gothic, fonts-wqy-zenhei, fonts-thai-tlwg, fonts-kacst, fonts-freefont-ttf
+    # no-install-recommends  避免安裝非必須的文件，從而增加體積
+    
+    # google-chrome-unstable - Google Chrome
+    # fonts-ipafont-gothic   - Japanese font
+    # fonts-wqy-zenhei       - Chinese font
+    # fonts-thai-tlwg        - Thai font
+    # fonts-kacst            - Arabic font
+    # fonts-freefont-ttf     - Others font
+    
     && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf \
     --no-install-recommends \
+    # 為了壓縮 container 空間將 apt lists 的內容刪除
     && rm -rf /var/lib/apt/lists/*
 
 # Add user, so we don't need --no-sandbox.
 # same layer as npm install to keep re-chowned files from using up several hundred MBs more space
 # 'groupadd' 新增 [pptruser] 群組, 'useradd' 新增使用者 [pptruser] 加入 [audio,video pptruser] 群組
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+    # 新增資料夾
     && mkdir -p /home/pptruser/Downloads \
+    # 新增 User [pptruser:pptruser] /home/pptruser 寫入權限
     && chown -R pptruser:pptruser /home/pptruser
 
 # Run everything after as non-privileged user.
@@ -31,6 +49,7 @@ USER pptruser
 # Run everything after as non-privileged user.
 USER pptruser
 
+# 設定環境變數 PUPPETEER_EXECUTABLE_PATH puppeteer sharp 會去偵測
 ENV PUPPETEER_EXECUTABLE_PATH "/usr/bin/google-chrome-unstable"
 
 #####################
