@@ -30,10 +30,11 @@ namespace PuppeteerSharpDotNetCodeInDockerDemo {
                 // 要等待網頁切換顯示完成再抓圖
                 await page.WaitForSelectorAsync ("div.fwoverlay");
                 // 抓網頁畫面存檔
-                await page.ScreenshotAsync (Path.Combine (downloadsDirectory.FullName, $@"ScreenshotRegion('{region}'){DateTime.Now:yyyyMMddHHmmss}.jpg "));
+                await page.ScreenshotAsync (Path.Combine (downloadsDirectory.FullName, $@"ScreenshotRegion({region}){DateTime.Now:yyyyMMddHHmmss}.jpg "));
 
                 Console.WriteLine ($"ScreenshotRegion ('{region}')");
             }
+            await browser.CloseAsync ();
             Thread.Sleep (60000);
         }
     }
