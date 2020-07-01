@@ -46,8 +46,7 @@ RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
 # Run everything after as non-privileged user.
 USER pptruser
 
-# Run everything after as non-privileged user.
-USER pptruser
+
 
 # 設定環境變數 PUPPETEER_EXECUTABLE_PATH puppeteer sharp 會去偵測
 ENV PUPPETEER_EXECUTABLE_PATH "/usr/bin/google-chrome-unstable"
